@@ -33,7 +33,8 @@ rm -rf $RPM_BUILD_ROOT
     --record=filelist-%{name}-%{version}-%{release}-temp
 
 cat filelist-%{name}-%{version}-%{release}-temp | \
-    sed -e "s;^$RPM_BUILD_ROOT;;" \
+    sed -e "s;^$RPM_BUILD_ROOT;;" | \
+    grep -v "doc/" \
     > filelist-%{name}-%{version}-%{release}
 
 %clean
@@ -41,9 +42,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f filelist-%{name}-%{version}-%{release}
 %defattr(-,root,root)
-%doc COPYING
-%doc README
-%doc ChangeLog
 
 %changelog
 * Tue Feb 15 2011 Michael P. Soulier <michael_soulier@mitel.com>
