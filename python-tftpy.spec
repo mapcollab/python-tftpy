@@ -20,6 +20,13 @@ AutoReqProv: no
 This module is a pure Python implementation of the TFTP protocol, RFCs 1350,
 2347, 2348 and the tsize option from 2349.
 
+%package examples
+Summary: A pure python TFTP library - example client/server
+Group: Libraries/Net
+Requires:%{name} = %{version}
+%description examples
+Example scripts using python-tftpy.
+
 %prep
 %setup -q -n tftpy-%{version}
 
@@ -34,7 +41,8 @@ rm -rf $RPM_BUILD_ROOT
 
 cat filelist-%{name}-%{version}-%{release}-temp | \
     sed -e "s;^$RPM_BUILD_ROOT;;" | \
-    grep -v "doc/" \
+    grep -v "doc/" | \
+    grep -v "bin/" \
     > filelist-%{name}-%{version}-%{release}
 
 %clean
@@ -42,6 +50,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f filelist-%{name}-%{version}-%{release}
 %defattr(-,root,root)
+
+%files examples
+%defattr(0755,root,root)
+/usr/bin/*
+
 
 %changelog
 * Tue Feb 15 2011 Michael P. Soulier <michael_soulier@mitel.com>
