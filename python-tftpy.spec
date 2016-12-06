@@ -44,7 +44,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING
 %doc README
 %doc ChangeLog
-%doc PKG-INFO
 
 %changelog
 * Tue Feb 15 2011 Michael P. Soulier <michael_soulier@mitel.com>
