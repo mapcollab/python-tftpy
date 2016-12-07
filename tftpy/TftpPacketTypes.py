@@ -46,7 +46,7 @@ class TftpPacketWithOptions(object):
         """This method decodes the section of the buffer that contains an
         unknown number of options. It returns a dictionary of option names and
         values."""
-        format = "!"
+        format = b"!"
         options = {}
 
         log.debug("decode_options: buffer is: %s", repr(buffer))
@@ -62,7 +62,7 @@ class TftpPacketWithOptions(object):
             if ord(c) == 0:
                 log.debug("found a null at length %d", length)
                 if length > 0:
-                    format += "%dsx" % length
+                    format += b"%dsx" % length
                     length = -1
                 else:
                     raise TftpException("Invalid options in buffer")
@@ -167,7 +167,7 @@ class TftpPacketInitial(TftpPacket, TftpPacketWithOptions):
 
         # FIXME - this shares a lot of code with decode_options
         nulls = 0
-        format = ""
+        format = b""
         nulls = length = tlength = 0
         log.debug("in decode: about to iterate buffer counting nulls")
         subbuf = self.buffer[2:]
@@ -177,7 +177,7 @@ class TftpPacketInitial(TftpPacket, TftpPacketWithOptions):
             if c == 0:
                 nulls += 1
                 log.debug("found a null at length %d, now have %d", length, nulls)
-                format += "%dsx" % length
+                format += b"%dsx" % length
                 length = -1
                 # At 2 nulls, we want to mark that position for decoding.
                 if nulls == 2:
@@ -268,7 +268,7 @@ class TftpPacketDAT(TftpPacket):
         returns self for easy method chaining."""
         if len(self.data) == 0:
             log.debug("Encoding an empty DAT packet")
-        format = "!HH%ds" % len(self.data)
+        format = b"!HH%ds" % len(self.data)
         self.buffer = struct.pack(format,
                                   self.opcode,
                                   self.blocknumber,
@@ -280,7 +280,7 @@ class TftpPacketDAT(TftpPacket):
         easy method chaining."""
         # We know the first 2 bytes are the opcode. The second two are the
         # block number.
-        (self.blocknumber,) = struct.unpack("!H", self.buffer[2:4])
+        (self.blocknumber,) = struct.unpack(b"!H", self.buffer[2:4])
         log.debug("decoding DAT packet, block number %d", self.blocknumber)
         log.debug("should be %d bytes in the packet total", len(self.buffer))
         # Everything else is data.
@@ -308,7 +308,7 @@ class TftpPacketACK(TftpPacket):
     def encode(self):
         log.debug("encoding ACK: opcode = %d, block = %d",
                      self.opcode, self.blocknumber)
-        self.buffer = struct.pack("!HH", self.opcode, self.blocknumber)
+        self.buffer = struct.pack(b"!HH", self.opcode, self.blocknumber)
         return self
 
     def decode(self):
@@ -316,7 +316,7 @@ class TftpPacketACK(TftpPacket):
             log.debug("detected TFTP ACK but request is too large, will truncate")
             log.debug("buffer was: %s", repr(self.buffer))
             self.buffer = self.buffer[0:4]
-        self.opcode, self.blocknumber = struct.unpack("!HH", self.buffer)
+        self.opcode, self.blocknumber = struct.unpack(b"!HH", self.buffer)
         log.debug("decoded ACK packet: opcode = %d, block = %d",
                      self.opcode, self.blocknumber)
         return self
@@ -370,7 +370,7 @@ class TftpPacketERR(TftpPacket):
     def encode(self):
         """Encode the DAT packet based on instance variables, populating
         self.buffer, returning self."""
-        format = "!HH%dsx" % len(self.errmsgs[self.errorcode])
+        format = b"!HH%dsx" % len(self.errmsgs[self.errorcode])
         log.debug("encoding ERR packet with format %s", format)
         self.buffer = struct.pack(format,
                                   self.opcode,
@@ -385,13 +385,13 @@ class TftpPacketERR(TftpPacket):
         log.debug("Decoding ERR packet, length %s bytes", buflen)
         if buflen == 4:
             log.debug("Allowing this affront to the RFC of a 4-byte packet")
-            format = "!HH"
+            format = b"!HH"
             log.debug("Decoding ERR packet with format: %s", format)
             self.opcode, self.errorcode = struct.unpack(format,
                                                         self.buffer)
         else:
             log.debug("Good ERR packet > 4 bytes")
-            format = "!HH%dsx" % (len(self.buffer) - 5)
+            format = b"!HH%dsx" % (len(self.buffer) - 5)
             log.debug("Decoding ERR packet with format: %s", format)
             self.opcode, self.errorcode, self.errmsg = struct.unpack(format,
                                                                      self.buffer)
@@ -416,14 +416,14 @@ class TftpPacketOACK(TftpPacket, TftpPacketWithOptions):
         return 'OACK packet:\n    options = %s' % self.options
 
     def encode(self):
-        format = "!H" # opcode
+        format = b"!H" # opcode
         options_list = []
         log.debug("in TftpPacketOACK.encode")
         for key in self.options:
             log.debug("looping on option key %s", key)
             log.debug("value is %s", self.options[key])
-            format += "%dsx" % len(key)
-            format += "%dsx" % len(self.options[key])
+            format += b"%dsx" % len(key)
+            format += b"%dsx" % len(self.options[key])
             options_list.append(key)
             options_list.append(self.options[key])
         self.buffer = struct.pack(format, self.opcode, *options_list)
