@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 23 2016 Tomasz Rostanski <tomasz.rostanski@thalesgroup.com> 0.6.3-0.2
+- python-tftpy.spec: fix %%setup (tomasz.rostanski@thalesgroup.com.pl)
+
 * Fri Dec 23 2016 Michal Gawlik <michal.gawlik@thalesgroup.com> 0.6.3-0.1
 - new package built with tito
 
