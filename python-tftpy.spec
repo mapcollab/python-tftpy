@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 23 2016 Michal Gawlik <michal.gawlik@thalesgroup.com> 0.6.3-0.1
+- new package built with tito
+
 * Tue Feb 15 2011 Michael P. Soulier <michael_soulier@mitel.com>
 - [0.5.1-01]
 - Initial rpm build.
