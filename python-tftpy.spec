@@ -1,6 +1,6 @@
 Name: python-tftpy
 Version: 0.6.3
-Release: 0.1
+Release: 0.2
 Packager: Michael P. Soulier <michael_soulier@mitel.com>
 Summary: A pure python TFTP library.
 License: BSD
@@ -28,7 +28,7 @@ Requires:%{name} = %{version}
 Example scripts using python-tftpy.
 
 %prep
-%setup -q -n tftpy-%{version}
+%setup -q -n %{name}-%{version}
 
 %build
 %{__python} setup.py build
