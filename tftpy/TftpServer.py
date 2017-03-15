@@ -103,16 +103,13 @@ class TftpServer(TftpSession):
             log.debug("shutdown_gracefully is %s", self.shutdown_gracefully)
             if self.shutdown_immediately:
                 log.warn("Shutting down now. Session count: %d" % len(self.sessions))
-                self.sock.close()
-                for key in self.sessions:
-                    self.sessions[key].end()
-                self.sessions = []
+                self.close_all_sockets()
                 break
 
             elif self.shutdown_gracefully:
                 if not self.sessions:
                     log.warn("In graceful shutdown mode and all sessions complete.")
-                    self.sock.close()
+                    self.close_all_sockets()
                     break
 
             # Build the inputlist array of sockets to select() on.
@@ -253,3 +250,13 @@ class TftpServer(TftpSession):
             self.shutdown_immediately = True
         else:
             self.shutdown_gracefully = True
+
+    def close_all_sockets(self):
+        """Forcible close all sockets."""
+        if self.sock is not None:
+            self.sock.close()
+            self.sock = None
+        for key in self.sessions:
+            self.sessions[key].end()
+        self.sessions = {}
+
