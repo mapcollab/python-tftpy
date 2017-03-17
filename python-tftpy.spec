@@ -1,6 +1,6 @@
 Name: python-tftpy
 Version: 0.6.3
-Release: 0.3%{?dist}
+Release: 0.4%{?dist}
 Packager: Michael P. Soulier <michael_soulier@mitel.com>
 Summary: A pure python TFTP library.
 License: BSD
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 17 2017 Michal Gawlik <michal.gawlik@thalesgroup.com> 0.6.3-0.4
+- TftpServer: close_all_sockets introduced (michal.gawlik@thalesgroup.com)
+
 * Fri Feb 24 2017 Michal Gawlik <michal.gawlik@thalesgroup.com> 0.6.3-0.3
 - spec: add dist tag (michal.gawlik@thalesgroup.com)
 
